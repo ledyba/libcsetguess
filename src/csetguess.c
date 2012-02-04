@@ -39,7 +39,8 @@ enum CSET_GUESS_CHARSETS cset_guess(const unsigned char* data, unsigned int len)
 
 	lastAscii = is_ascii(data[0]);
 	for(i=1;i<len;i++){
-		if(!(lastAscii && (lastAscii = is_ascii(data[i])))){
+		int nowAscii = is_ascii(data[i]);
+		if(!(lastAscii && nowAscii)){
 			int nonZero = FALSE;
 			for(j=0;j<TARGET_ENCODINGS;j++){
 				const struct ENCODE_DIC *dic = &dictionary[j];
@@ -56,6 +57,7 @@ enum CSET_GUESS_CHARSETS cset_guess(const unsigned char* data, unsigned int len)
 				}
 			}
 		}
+		lastAscii = nowAscii;
 	}
 	ret:
 	for(i=0;i<TARGET_ENCODINGS;i++){
